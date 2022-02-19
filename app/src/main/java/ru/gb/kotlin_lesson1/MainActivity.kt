@@ -2,11 +2,13 @@ package ru.gb.kotlin_lesson1
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
-import ru.gb.kotlin_lesson1.R
+import ru.gb.kotlin_lesson1.Domain.GameEngine
+import ru.gb.kotlin_lesson1.Utils.Utilities
 
 class MainActivity : AppCompatActivity() {
 
@@ -17,11 +19,62 @@ class MainActivity : AppCompatActivity() {
     private lateinit var showSecretWordCheckBox : CheckBox
     private lateinit var inputWordEditTextView : EditText
     private lateinit var actionButton : Button
+    private val gameWords : GameEngine = GameEngine()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initView()
+        initListener()
+    }
+
+    private fun initListener() {
+        showSecretWordCheckBox.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(view: View?) {
+                if (showSecretWordCheckBox.isChecked) {
+                    secretTextView.text = gameWords.getSecret()
+                } else {
+                    secretTextView.text = ""
+                }
+            }
+        })
+        actionButton.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(view: View?) {
+                when(gameWords.counterRound) {
+                    0 -> {
+                        gameWords.incRound()
+                        titleTextView.visibility = View.VISIBLE
+                        titleTextView.text = "Раунд №" + gameWords.counterRound.toString()
+                        titleTextView.setTextColor(resources.getColor(R.color.title_text_color))
+                        setWordTextView.text = gameWords.storageWords.getListWordToStr()
+                        showSecretWordCheckBox.setEnabled(true)
+                        showSecretWordCheckBox.setChecked(false)
+                        secretTextView.text = ""
+                        keyTextView.text = ""
+                        inputWordEditTextView.setText("")
+                        actionButton.text = resources.getString(R.string.next_button_text)
+                    }
+                    else -> {
+                        if (gameWords.isVictory(inputWordEditTextView.text.toString())) {
+                            titleTextView.text = "Вы выйграли!!!!"
+                            actionButton.text = resources.getString(R.string.begin_button_text)
+                        } else if (gameWords.counterRound == 3) {
+                            titleTextView.text = "Вы проиграли!!!!"
+                            titleTextView.setTextColor(resources.getColor(R.color.red_text_color))
+                            actionButton.text = resources.getString(R.string.begin_button_text)
+                            showSecretWordCheckBox.setEnabled(false)
+                            secretTextView.text = gameWords.getSecret()
+                            gameWords.counterRound = 0
+                        } else {
+                            gameWords.incRound()
+                            titleTextView.text = "Раунд №" + gameWords.counterRound.toString()
+                            keyTextView.text = Utilities.findChar(inputWordEditTextView.text.toString(),gameWords.getSecret())
+                            inputWordEditTextView.setText("")
+                        }
+                    }
+                }
+            }
+        })
     }
 
     private fun initView() {
@@ -32,6 +85,7 @@ class MainActivity : AppCompatActivity() {
         showSecretWordCheckBox = findViewById<CheckBox>(R.id.show_secret_word_checkbox)
         inputWordEditTextView = findViewById<EditText>(R.id.input_word_edittext_view)
         actionButton = findViewById<Button>(R.id.action_button)
+
     }
 
 }
