@@ -61,7 +61,7 @@
         app:layout_constraintTop_toBottomOf="@id/title_linearlayout">
 
         <androidx.appcompat.widget.AppCompatCheckBox
-            android:id="@+id/show_word_checkbox"
+            android:id="@+id/show_secret_word_checkbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:enabled="false"
@@ -102,7 +102,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@id/material_button"
+        app:layout_constraintBottom_toTopOf="@id/action_button"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/center_linearlayout">
@@ -126,7 +126,7 @@
     </LinearLayout>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/material_button"
+        android:id="@+id/action_button"
         style="@style/material_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
