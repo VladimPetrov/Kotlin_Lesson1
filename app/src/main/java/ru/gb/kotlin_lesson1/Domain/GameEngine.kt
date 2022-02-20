@@ -22,4 +22,5 @@ object GameEngine {
         return isVictory
     }
     fun getSecret() : String { return storageWords.secretWord }
+    fun copyStorageWords() = storageWords.copy()
 }
