@@ -8,7 +8,7 @@ import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
 import ru.gb.kotlin_lesson1.Domain.GameEngine
-import ru.gb.kotlin_lesson1.Utils.Utilities
+import ru.gb.kotlin_lesson1.Utils.findChar
 
 class MainActivity : AppCompatActivity() {
 
@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var showSecretWordCheckBox : CheckBox
     private lateinit var inputWordEditTextView : EditText
     private lateinit var actionButton : Button
-    private val gameWords : GameEngine = GameEngine()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         showSecretWordCheckBox.setOnClickListener(object : View.OnClickListener {
             override fun onClick(view: View?) {
                 if (showSecretWordCheckBox.isChecked) {
-                    secretTextView.text = gameWords.getSecret()
+                    secretTextView.text = GameEngine.getSecret()
                 } else {
                     secretTextView.text = ""
                 }
@@ -40,13 +40,13 @@ class MainActivity : AppCompatActivity() {
         })
         actionButton.setOnClickListener(object : View.OnClickListener {
             override fun onClick(view: View?) {
-                when(gameWords.counterRound) {
+                when(GameEngine.counterRound) {
                     0 -> {
-                        gameWords.incRound()
+                        GameEngine.incRound()
                         titleTextView.visibility = View.VISIBLE
-                        titleTextView.text = "Раунд №" + gameWords.counterRound.toString()
+                        titleTextView.text = "Раунд №" + GameEngine.counterRound.toString()
                         titleTextView.setTextColor(resources.getColor(R.color.title_text_color))
-                        setWordTextView.text = gameWords.storageWords.getListWordToStr()
+                        setWordTextView.text = GameEngine.storageWords.getListWordToStr()
                         showSecretWordCheckBox.setEnabled(true)
                         showSecretWordCheckBox.setChecked(false)
                         secretTextView.text = ""
@@ -55,20 +55,20 @@ class MainActivity : AppCompatActivity() {
                         actionButton.text = resources.getString(R.string.next_button_text)
                     }
                     else -> {
-                        if (gameWords.isVictory(inputWordEditTextView.text.toString())) {
+                        if (GameEngine.isVictory(inputWordEditTextView.text.toString())) {
                             titleTextView.text = "Вы выйграли!!!!"
                             actionButton.text = resources.getString(R.string.begin_button_text)
-                        } else if (gameWords.counterRound == 3) {
+                        } else if (GameEngine.counterRound == 3) {
                             titleTextView.text = "Вы проиграли!!!!"
                             titleTextView.setTextColor(resources.getColor(R.color.red_text_color))
                             actionButton.text = resources.getString(R.string.begin_button_text)
                             showSecretWordCheckBox.setEnabled(false)
-                            secretTextView.text = gameWords.getSecret()
-                            gameWords.counterRound = 0
+                            secretTextView.text = GameEngine.getSecret()
+                            GameEngine.counterRound = 0
                         } else {
-                            gameWords.incRound()
-                            titleTextView.text = "Раунд №" + gameWords.counterRound.toString()
-                            keyTextView.text = Utilities.findChar(inputWordEditTextView.text.toString(),gameWords.getSecret())
+                            GameEngine.incRound()
+                            titleTextView.text = "Раунд №" + GameEngine.counterRound.toString()
+                            keyTextView.text = findChar(inputWordEditTextView.text.toString(),GameEngine.getSecret())
                             inputWordEditTextView.setText("")
                         }
                     }

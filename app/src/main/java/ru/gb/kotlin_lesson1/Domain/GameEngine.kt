@@ -1,6 +1,6 @@
 package ru.gb.kotlin_lesson1.Domain
 
-class GameEngine {
+object GameEngine {
     var counterRound : Int = 0
     var storageWords : Storage
     init {
